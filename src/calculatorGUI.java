@@ -8,6 +8,9 @@
 // TODO make GUI pretty
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -34,8 +37,8 @@ public class calculatorGUI {
     private JButton button_pointButton;
     private JButton button_plusButton;
 
-    private Font impactFont = new Font("Impact", Font.BOLD, 60);
-    private Font impactFontLarge = new Font("Impact", Font.BOLD, 100);
+    private Font impactFont = new Font("Calibri", Font.BOLD, 22);
+    private Font impactFontLarge = new Font("Calibri", Font.BOLD, 36);
 
     public String setDisplayString = "0";
     public String calculation_cache = "0";
@@ -44,7 +47,7 @@ public class calculatorGUI {
     public static void main(String[] args) {
         JFrame jFrame = new JFrame("Calculator");
         jFrame.setContentPane(new calculatorGUI().Calculator);
-        jFrame.setPreferredSize(new Dimension(600, 800));
+        jFrame.setPreferredSize(new Dimension(287, 319));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
         jFrame.setResizable(false);
@@ -79,14 +82,18 @@ public class calculatorGUI {
     }
 
     private void initialiseGUI() {
+        Border eb = new EmptyBorder(10, 10, 10, 10);
+        Border b = new SoftBevelBorder(10);
+
         calculator_display.setEditable(false);
         resetDisplay();
         calculator_display.setFont(impactFontLarge);
         calculator_display.setHorizontalAlignment(JTextField.RIGHT);
+        calculator_display.setBorder(b);
 
         for (JButton button : getButtons()) {
             button.setFont(impactFont);
-            button.setMargin(new Insets(0, 0, 0, 5));
+            button.setBorder(b);
         }
     }
 
@@ -186,7 +193,7 @@ public class calculatorGUI {
             return String.valueOf(formatDoubleNumber(number_one + number_two));
         } else if (String.valueOf(formatDoubleNumber(number_one + number_two)).length() >= 10) {
             BigDecimal bd = new BigDecimal(formatDoubleNumber(number_one + number_two));
-            bd = bd.round(new MathContext(3));
+            bd = bd.round(new MathContext(10));
             double rounded = bd.doubleValue();
 
             debugLogger.log("Calculation result breached 10 digits!", debugLogger.colour.yellow);
@@ -210,7 +217,7 @@ public class calculatorGUI {
             return String.valueOf(formatDoubleNumber(number_one - number_two));
         } else if (String.valueOf(formatDoubleNumber(number_one - number_two)).length() >= 10) {
             BigDecimal bd = new BigDecimal(formatDoubleNumber(number_one - number_two));
-            bd = bd.round(new MathContext(3));
+            bd = bd.round(new MathContext(10));
             double rounded = bd.doubleValue();
 
             debugLogger.log("Calculation result breached 10 digits!", debugLogger.colour.yellow);
@@ -234,7 +241,7 @@ public class calculatorGUI {
             return String.valueOf(formatDoubleNumber(number_one * number_two));
         } else if (String.valueOf(formatDoubleNumber(number_one * number_two)).length() >= 10) {
             BigDecimal bd = new BigDecimal(formatDoubleNumber(number_one * number_two));
-            bd = bd.round(new MathContext(3));
+            bd = bd.round(new MathContext(10));
             double rounded = bd.doubleValue();
 
             debugLogger.log("Calculation result breached 10 digits!", debugLogger.colour.yellow);
@@ -258,7 +265,7 @@ public class calculatorGUI {
             return String.valueOf(formatDoubleNumber(number_one / number_two));
         } else if (String.valueOf(formatDoubleNumber(number_one / number_two)).length() >= 10) {
             BigDecimal bd = new BigDecimal(formatDoubleNumber(number_one / number_two));
-            bd = bd.round(new MathContext(3));
+            bd = bd.round(new MathContext(10));
             double rounded = bd.doubleValue();
 
             debugLogger.log("Calculation result breached 10 digits!", debugLogger.colour.yellow);
