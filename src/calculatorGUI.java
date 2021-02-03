@@ -1,3 +1,12 @@
+// Calculator for performing basic maths.
+// Does NOT stack operations. Eg. 1 + 1 + 1 will equal 2! This is a KNOWN bug!
+// First time I have worked on GUI.
+// Using Java Swing.
+// Started 01/02/2021
+
+// TODO handle stacking operations
+// TODO make GUI pretty
+
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
@@ -111,28 +120,24 @@ public class calculatorGUI {
         button_plusButton.addActionListener(e -> {
             calculation_cache = calculator_display.getText();
             operator_cache = "+";
-            handleEquals();
             resetDisplay();
         });
 
         xButton.addActionListener(e -> {
             calculation_cache = calculator_display.getText();
             operator_cache = "*";
-            handleEquals();
             resetDisplay();
         });
 
         button_divideButton.addActionListener(e -> {
             calculation_cache = calculator_display.getText();
             operator_cache = "/";
-            handleEquals();
             resetDisplay();
         });
 
         button_minusButton.addActionListener(e -> {
             calculation_cache = calculator_display.getText();
             operator_cache = "-";
-            handleEquals();
             resetDisplay();
         });
 
