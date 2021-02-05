@@ -7,13 +7,16 @@
 // TODO handle stacking operations
 // TODO make GUI pretty
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.net.URL;
 
 public class calculatorGUI {
     private JPanel Calculator;
@@ -45,7 +48,12 @@ public class calculatorGUI {
     public String operator_cache = "";
 
     public static final String NAME = "Calculator ";
-    public static final String VERSION = "v0.0.5";
+    public static final String VERSION = "v0.0.7";
+
+    public enum sound {
+        hover,
+        click
+    }
 
     public static void main(String[] args) {
         JFrame jFrame = new JFrame(NAME + VERSION);
@@ -102,12 +110,36 @@ public class calculatorGUI {
     }
 
     private void initialiseButtons() {
-        cButton.addActionListener(e -> resetDisplay());
-        CEButton.addActionListener(e -> full_reset());
+        cButton.addActionListener(e -> {
+            playSound(sound.click);
+            resetDisplay();
+        });
+
+        cButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
+        CEButton.addActionListener(e -> {
+            playSound(sound.click);
+            full_reset();
+        });
+
+        CEButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
 
         for (int i = 0; i < 10; i++) {
             int increment = i;
             getButtons()[i].addActionListener(e -> {
+                playSound(sound.click);
                 if (calculator_display.getText().length() < 10) {
                     if (calculator_display.getText().startsWith("0")) {
                         setDisplayString = getButtons()[increment].getText();
@@ -120,9 +152,17 @@ public class calculatorGUI {
                     debugLogger.log("Max digits reached!", debugLogger.colour.yellow);
                 }
             });
+            getButtons()[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    playSound(sound.hover);
+                }
+            });
         }
 
         button_pointButton.addActionListener(e -> {
+            playSound(sound.click);
             int count = 0;
             Character point = '.';
             for (Character c : calculator_display.getText().toCharArray()) {
@@ -139,32 +179,85 @@ public class calculatorGUI {
             }
         });
 
+        button_pointButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
         button_plusButton.addActionListener(e -> {
+            playSound(sound.click);
             calculation_cache = calculator_display.getText();
             operator_cache = "+";
             resetDisplay();
         });
 
+        button_plusButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
         xButton.addActionListener(e -> {
+            playSound(sound.click);
             calculation_cache = calculator_display.getText();
             operator_cache = "*";
             resetDisplay();
         });
 
+        xButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
         button_divideButton.addActionListener(e -> {
+            playSound(sound.click);
             calculation_cache = calculator_display.getText();
             operator_cache = "/";
             resetDisplay();
         });
 
+        button_divideButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
         button_minusButton.addActionListener(e -> {
+            playSound(sound.click);
             calculation_cache = calculator_display.getText();
             operator_cache = "-";
             resetDisplay();
         });
 
+        button_minusButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
+        });
+
         button_equalsButton.addActionListener(e -> {
+            playSound(sound.click);
             handleEquals();
+        });
+
+        button_equalsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                playSound(sound.hover);
+            }
         });
     }
 
@@ -330,4 +423,41 @@ public class calculatorGUI {
             return String.format("%s", number);
         }
     }
+
+    public void playSound(sound s) {
+        // sounds are from quake 3 arena
+        switch (s) {
+            case click:
+                try {
+                    URL url = new URL("file:./assets/buttonclick.wav");
+                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioIn);
+                    clip.start();
+                } catch (Exception e) {
+                    debugLogger.log(e.toString(), debugLogger.colour.red);
+                }
+                break;
+
+            case hover:
+                try {
+                    URL url = new URL("file:./assets/button_mouseover.wav");
+                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+                    Clip clip = AudioSystem.getClip();
+
+                    clip.open(audioIn);
+                    clip.start();
+                } catch (Exception e) {
+                    debugLogger.log(e.toString(), debugLogger.colour.red);
+                }
+                break;
+
+            default:
+                debugLogger.log("No sound was specified", debugLogger.colour.yellow);
+                break;
+        }
+
+
+    }
+
 }
