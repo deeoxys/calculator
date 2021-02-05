@@ -5,7 +5,7 @@
 // Started 01/02/2021
 
 // TODO handle stacking operations
-// TODO make GUI pretty
+// TODO fix bug where 0.9 will end up as 9
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -433,6 +433,10 @@ public class calculatorGUI {
                     AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
                     Clip clip = AudioSystem.getClip();
                     clip.open(audioIn);
+                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                    double gain = 0.01;
+                    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                    gainControl.setValue(dB);
                     clip.start();
                 } catch (Exception e) {
                     debugLogger.log(e.toString(), debugLogger.colour.red);
@@ -444,8 +448,11 @@ public class calculatorGUI {
                     URL url = new URL("file:./assets/button_mouseover.wav");
                     AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
                     Clip clip = AudioSystem.getClip();
-
                     clip.open(audioIn);
+                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                    double gain = 0.01;
+                    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                    gainControl.setValue(dB);
                     clip.start();
                 } catch (Exception e) {
                     debugLogger.log(e.toString(), debugLogger.colour.red);
@@ -456,8 +463,5 @@ public class calculatorGUI {
                 debugLogger.log("No sound was specified", debugLogger.colour.yellow);
                 break;
         }
-
-
     }
-
 }
