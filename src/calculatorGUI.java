@@ -50,6 +50,8 @@ public class calculatorGUI {
     public static void main(String[] args) {
         JFrame jFrame = new JFrame(NAME + VERSION);
         jFrame.setContentPane(new calculatorGUI().Calculator);
+        ImageIcon icon = new ImageIcon("./assets/smiley2.gif");
+        jFrame.setIconImage(icon.getImage());
         jFrame.setPreferredSize(new Dimension(287, 319));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
