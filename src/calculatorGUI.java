@@ -37,15 +37,18 @@ public class calculatorGUI {
     private JButton button_pointButton;
     private JButton button_plusButton;
 
-    private Font impactFont = new Font("Calibri", Font.BOLD, 22);
-    private Font impactFontLarge = new Font("Calibri", Font.BOLD, 36);
+    private Font font = new Font("Lucida Console", Font.PLAIN, 22);
+    private Font fontLarge = new Font("Lucida Console", Font.PLAIN, 36);
 
     public String setDisplayString = "0";
     public String calculation_cache = "0";
     public String operator_cache = "";
 
+    public static final String NAME = "Calculator ";
+    public static final String VERSION = "v0.0.5";
+
     public static void main(String[] args) {
-        JFrame jFrame = new JFrame("Calculator");
+        JFrame jFrame = new JFrame(NAME + VERSION);
         jFrame.setContentPane(new calculatorGUI().Calculator);
         jFrame.setPreferredSize(new Dimension(287, 319));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,17 +86,16 @@ public class calculatorGUI {
 
     private void initialiseGUI() {
         Border eb = new EmptyBorder(10, 10, 10, 10);
-        Border b = new SoftBevelBorder(10);
 
         calculator_display.setEditable(false);
         resetDisplay();
-        calculator_display.setFont(impactFontLarge);
+        calculator_display.setFont(fontLarge);
         calculator_display.setHorizontalAlignment(JTextField.RIGHT);
-        calculator_display.setBorder(b);
+        calculator_display.setBorder(eb);
 
         for (JButton button : getButtons()) {
-            button.setFont(impactFont);
-            button.setBorder(b);
+            button.setFont(font);
+            button.setBorder(eb);
         }
     }
 
@@ -119,8 +121,19 @@ public class calculatorGUI {
         }
 
         button_pointButton.addActionListener(e -> {
-            if (!calculator_display.getText().endsWith(".")) {
-                calculator_display.setText(setDisplayString + ".");
+            int count = 0;
+            Character point = '.';
+            for (Character c : calculator_display.getText().toCharArray()) {
+                if (c == point) {
+                    count++;
+                }
+            }
+
+            if (count < 1) {
+                setDisplayString = calculator_display.getText() + ".";
+                calculator_display.setText(setDisplayString);
+            } else {
+                debugLogger.log("Caught excessive decimal point!", debugLogger.colour.green);
             }
         });
 
